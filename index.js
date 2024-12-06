@@ -44,6 +44,10 @@ async function run() {
       res.send(result);
     });
 
+    app.delete('/users/:id', (req, res) => {
+      const id = req.params.id;
+      console.log("Deleting user with ID:", id);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
