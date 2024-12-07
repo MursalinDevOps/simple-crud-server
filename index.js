@@ -49,6 +49,12 @@ async function run() {
       const result = await userCollection.insertOne(user);
       res.send(result);
     });
+    // update an user info by PUT method
+    app.put('/users/:id', async(req, res) => {
+      const id = req.params.id;
+      const updatedUserInfo = req.body;
+      console.log(updatedUserInfo)
+    })
     // delete an user by identifying with id
     app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
