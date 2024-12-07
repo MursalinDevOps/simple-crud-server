@@ -35,6 +35,13 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // load data dynamically on the update profile route
+    app.get("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const user = await userCollection.findOne(query);
+      res.send(user);
+    });
 
     app.post("/users", async (req, res) => {
       const user = req.body;
@@ -42,8 +49,8 @@ async function run() {
       const result = await userCollection.insertOne(user);
       res.send(result);
     });
-
-    app.delete("/users/:id", async(req, res) => {
+    // delete an user by identifying with id
+    app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
       console.log("Deleting user with ID:", id);
       const query = { _id: new ObjectId(id) };
