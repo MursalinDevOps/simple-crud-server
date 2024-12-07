@@ -49,12 +49,37 @@ async function run() {
       const result = await userCollection.insertOne(user);
       res.send(result);
     });
-    // update an user info by PUT method
-    app.put('/users/:id', async(req, res) => {
+    app.put('/users/:id', async (req, res) => {
       const id = req.params.id;
+      console.log('Recieved ID', id)
       const updatedUserInfo = req.body;
-      console.log(updatedUserInfo)
-    })
+    
+      // Log the input data for debugging
+      console.log(updatedUserInfo);
+    
+      // Ensure the ObjectId is valid
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).send({ error: 'Invalid ID format' });
+      }
+    
+      const filter = { _id: new ObjectId(id) }; // Corrected field name
+      const options = { upsert: true }; // Create a new user if not found
+      const updatedUser = {
+        $set: {
+          name: updatedUserInfo.name,
+          email: updatedUserInfo.email,
+        },
+      };
+    
+      try {
+        const result = await userCollection.updateOne(filter, updatedUser, options);
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Failed to update user' });
+      }
+    });
+    
     // delete an user by identifying with id
     app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
